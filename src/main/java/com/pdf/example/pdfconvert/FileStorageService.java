@@ -84,9 +84,12 @@ public class FileStorageService {
 
             Path arquivoOrigem = this.fileStorageLocation.resolve(fileName);
             Path arquivoDestino = this.fileStorageLocation.resolve(fileNamePDF);
-
-            Files.delete(arquivoOrigem);
-            Files.delete(arquivoDestino);
+            if(Files.exists(arquivoOrigem)){
+                Files.delete(arquivoOrigem);
+            }
+            if(Files.exists(arquivoDestino)){
+                Files.delete(arquivoDestino);
+            }
 
         } catch (IOException ex) {
             throw new MyFileNotFoundException("File not deleted " + fileName, ex);
