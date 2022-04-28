@@ -1,4 +1,4 @@
-package com.pdf.example.pdfconvert;
+package com.pdf.example.pdfconvert.exception;
 
 public class FileStorageException extends RuntimeException {
     public FileStorageException(String message) {

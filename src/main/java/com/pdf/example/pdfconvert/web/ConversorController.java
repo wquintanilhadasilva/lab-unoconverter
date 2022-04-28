@@ -1,5 +1,6 @@
-package com.pdf.example.pdfconvert;
+package com.pdf.example.pdfconvert.web;
 
+import com.pdf.example.pdfconvert.service.FileConverterService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -26,7 +27,7 @@ public class ConversorController {
     @PostMapping("/")
     public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file) {
 
-        Resource resource = fileStorageService.storeFile(file);
+        Resource resource = fileStorageService.convert(file);
 
         String contentType = "application/octet-stream";
 
@@ -41,4 +42,5 @@ public class ConversorController {
         fileStorageService.deleteFiles(fileName);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
+
 }

@@ -1,4 +1,4 @@
-package com.pdf.example.pdfconvert;
+package com.pdf.example.pdfconvert.exception;
 
 public class MyFileNotFoundException extends RuntimeException {
     public MyFileNotFoundException(String message) {

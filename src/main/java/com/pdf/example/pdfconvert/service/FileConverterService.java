@@ -1,26 +1,28 @@
-package com.pdf.example.pdfconvert;
+package com.pdf.example.pdfconvert.service;
 
+import com.pdf.example.pdfconvert.exception.FileStorageException;
+import com.pdf.example.pdfconvert.application.FileStorageProperties;
+import com.pdf.example.pdfconvert.exception.MyFileNotFoundException;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 @Service
-public class FileStorageService {
+public class FileConverterService {
 
     private final Path fileStorageLocation;
 
     private final UnoConvertService unoConvertService;
 
-    public FileStorageService(FileStorageProperties fileStorageProperties, UnoConvertService unoConvertService) {
+    public FileConverterService(FileStorageProperties fileStorageProperties, UnoConvertService unoConvertService) {
 
         this.unoConvertService = unoConvertService;
 
@@ -33,10 +35,10 @@ public class FileStorageService {
         }
     }
 
-    public Resource storeFile(MultipartFile file) {
+    public Resource convert(MultipartFile file) {
+
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
         String fileNamePDF = fileName.substring(0, fileName.lastIndexOf('.')) + ".pdf";
 
         try {
@@ -49,10 +51,16 @@ public class FileStorageService {
             Path targetLocation = this.fileStorageLocation.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
+            // Convert to PDF
             boolean ok = this.unoConvertService.convert(fileName, fileNamePDF);
             if(ok){
-                Resource rs = this.loadFileAsResource(fileNamePDF);
-                return rs;
+                Resource resource = this.loadFileAsResource(fileNamePDF);
+
+                //Delete temp files conversion used
+                this.deleteFiles(fileName);
+                this.deleteFiles(fileNamePDF);
+
+                return resource;
             }else {
                 throw new FileStorageException("Could not convert file " + fileName + ". Please try again!");
             }
@@ -65,14 +73,11 @@ public class FileStorageService {
     private Resource loadFileAsResource(String fileName) {
         try {
             Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if(resource.exists()) {
-                return resource;
-            } else {
-                throw new MyFileNotFoundException("File not found " + fileName);
-            }
-        } catch (MalformedURLException ex) {
-            throw new MyFileNotFoundException("File not found " + fileName, ex);
+            byte[] data = Files.readAllBytes(filePath.toAbsolutePath());
+            Resource resource = new ByteArrayResource(data);
+            return resource;
+        } catch (IOException e) {
+            throw new MyFileNotFoundException("File not found " + fileName, e);
         }
     }
 
@@ -82,13 +87,13 @@ public class FileStorageService {
 
             String fileNamePDF = fileName.substring(0, fileName.lastIndexOf('.')) + ".pdf";
 
-            Path arquivoOrigem = this.fileStorageLocation.resolve(fileName);
-            Path arquivoDestino = this.fileStorageLocation.resolve(fileNamePDF);
-            if(Files.exists(arquivoOrigem)){
-                Files.delete(arquivoOrigem);
+            Path fromFile = this.fileStorageLocation.resolve(fileName);
+            Path toFile = this.fileStorageLocation.resolve(fileNamePDF);
+            if(Files.exists(fromFile)){
+                Files.delete(fromFile);
             }
-            if(Files.exists(arquivoDestino)){
-                Files.delete(arquivoDestino);
+            if(Files.exists(toFile)){
+                Files.delete(toFile);
             }
 
         } catch (IOException ex) {
