@@ -128,11 +128,19 @@ unoconvert --convert-to pdf --interface 0.0.0.0 --port 2002 ./file_example_XLSX_
 
 Para gerar a imagem a partir do Dockerfile:
 
+Compile a aplicação:
+
+```
+mvn clean package
+```
+
+Gere a imagem contendo o arquivo war da aplicação, compilado no comando anterior:
+
 ```
 docker build -t pdf-convert:v1 .
 ```
 
-Para rodar o container com a aplicação, execute:
+Execute um container da imagem criada com a aplicação:
 
 ```
 docker run -p 8081:8081 --rm --name="pdf-convert" pdf-convert:v1
