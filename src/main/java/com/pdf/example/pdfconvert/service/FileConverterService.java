@@ -44,6 +44,7 @@ public class FileConverterService {
         try {
             // Check if the file's name contains invalid characters
             if(fileName.contains("..")) {
+                this.deleteFiles(fileName);
                 throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
             }
 
@@ -53,20 +54,23 @@ public class FileConverterService {
 
             // Convert to PDF
             boolean ok = this.unoConvertService.convert(fileName, fileNamePDF);
+            
             if(ok){
+
                 Resource resource = this.loadFileAsResource(fileNamePDF);
 
-                //Delete temp files conversion used
-                this.deleteFiles(fileName);
-                this.deleteFiles(fileNamePDF);
-
                 return resource;
+
             }else {
                 throw new FileStorageException("Could not convert file " + fileName + ". Please try again!");
             }
 
         } catch (IOException ex) {
             throw new FileStorageException("Could not convert file " + fileName + ". Please try again!", ex);
+        }finally {
+            //Delete temp files conversion used
+            this.deleteFiles(fileName);
+            this.deleteFiles(fileNamePDF);
         }
     }
 
