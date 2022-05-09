@@ -165,3 +165,31 @@ Enviando um comando para limpar os arquivos temporários no servidor:
 curl --request DELETE \
   --url http://localhost:8081/api/conversor/file-sample_100kB.doc
 ```
+
+
+
+# ===>> CONVERSOR NATIVO LIBREOFFICE <========
+
+A biblioteca Libreoffice disponibiliza uma aplicação com endpoint restapi para realizar a conversão. Para tanto, basta subir um container docker e invocar uma api, informando o arquivo que deseja ser convertido e o formato para o qual deseja converter.
+
+## Docker
+
+Para subir o container:
+
+```
+docker run --rm -p 9980:9980 --name online --cap-add MKNOD --privileged libreoffice/online:master
+```
+
+> Neste caso ele vai rodar a aplicação completa e disponibilizar a porta 9980 do host para realizar a conversão.
+
+Gerar um arquivo de exemplo a ser convertido:
+
+```
+echo "Conteúdo do arquivo teste que será convertido" > teste.txt
+```
+
+Invocar a api para conversão:
+
+```
+curl -k --form file=@teste.txt https://localhost:9980/lool/convert-to/pdf > teste.pdf
+```
