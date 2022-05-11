@@ -155,7 +155,7 @@ Após rodar a aplicação, pode utilizar o terminal para enviar arquivos para co
 Enviando um arquivo para converter em PDF:
 
 ```
-curl --request POST --url http://localhost:8081/api/conversor/ --header 'content-type: multipart/form-data;' --form file=@./samples/lab-unoserver/file-sample_100kB.doc --output - > out.pdf
+curl --request POST --url http://localhost:8081/api/conversor --header 'content-type: multipart/form-data;' --form file=@./samples/lab-unoserver/file-sample_100kB.doc --output - > out.pdf
 
 ```
 
