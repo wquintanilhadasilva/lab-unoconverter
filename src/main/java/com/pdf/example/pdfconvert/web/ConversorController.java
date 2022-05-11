@@ -24,7 +24,7 @@ public class ConversorController {
 
     private final FileConverterService fileStorageService;
 
-    @PostMapping("/")
+    @PostMapping()
     public ResponseEntity<Resource> uploadFile(@RequestParam("file") MultipartFile file) {
 
         Resource resource = fileStorageService.convert(file);
