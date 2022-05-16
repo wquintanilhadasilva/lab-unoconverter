@@ -12,3 +12,11 @@ spring:
 application:
   file:
     upload-dir: /mnt/dados/git/wedson.silva/lab-unoserver/upload
+
+logging:
+  level:
+    ROOT: INFO
+    com:
+      pdf:
+        example:
+          pdfconvert: DEBUG
