@@ -1,0 +1,34 @@
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 500000
+        readTimeout: 500000
+        loggerLevel: basic
+
+
+server:
+  port: 8082
+
+spring:
+  servlet:
+    multipart:
+      enabled: 'true'
+      max-request-size: 215MB
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+
+logging:
+  level:
+    ROOT: INFO
+    com:
+      example:
+        pdffeign: DEBUG
+
+application:
+  feign:
+    fileconverter:
+      url: http://localhost:8081
+  file:
+    pdf: "/mnt/dados/git/wedson.silva/pdf-feign/doc.pdf"
