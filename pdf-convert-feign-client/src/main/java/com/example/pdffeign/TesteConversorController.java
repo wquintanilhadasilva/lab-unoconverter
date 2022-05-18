@@ -56,14 +56,35 @@ public class TesteConversorController {
     }
 
     public MultipartFile openFile(String fileName) throws IOException {
-        log.info("Abrindo arquivo para ser enviado...");
-        File file = new File(fileName);
-        InputStream input =  new FileInputStream(file);
-        DiskFileItem fileItem = new DiskFileItem("file",  "text/plain", false, file.getName(), (int) file.length() , file.getParentFile());
-        OutputStream os = fileItem.getOutputStream();
-        IOUtils.copy(input, os);
-        MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
-        return multipartFile;
+        final String PREFIX = "stream2file";
+        final String SUFFIX = ".tmp";
+        final String CONTENT_TYPE = "text/plain";
+        final String FIELD_NAME = "file";
+
+        File tempFile = File.createTempFile(PREFIX, SUFFIX);
+        tempFile.deleteOnExit();
+        try {
+            log.info("Abrindo arquivo para ser enviado...");
+            InputStream input = new FileInputStream(fileName);
+            DiskFileItem fileItem = new DiskFileItem(FIELD_NAME, CONTENT_TYPE, false, tempFile.getName(), (int) tempFile.length(), tempFile.getParentFile());
+            OutputStream os = fileItem.getOutputStream();
+            IOUtils.copy(input, os);
+            MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
+            return multipartFile;
+        }catch (IOException ex) {
+            log.error("Erro ao converter InputStream em MultipartFile", ex);
+            throw ex;
+        } finally {
+            tempFile.delete();
+        }
+        // log.info("Abrindo arquivo para ser enviado...");
+        // File file = new File(fileName);
+        // InputStream input =  new FileInputStream(file);
+        // DiskFileItem fileItem = new DiskFileItem("file",  "text/plain", false, file.getName(), (int) file.length() , file.getParentFile());
+        // OutputStream os = fileItem.getOutputStream();
+        // IOUtils.copy(input, os);
+        // MultipartFile multipartFile = new CommonsMultipartFile(fileItem);
+        // return multipartFile;
     }
 
 
