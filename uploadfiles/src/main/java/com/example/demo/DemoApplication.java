@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import feign.Response;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -10,8 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import java.io.File;
@@ -21,9 +18,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -42,6 +42,10 @@ public class DemoApplication implements CommandLineRunner {
 		
 		String file = "DANFE_GUILHERME_COELHO_MACHADO.pdf";
 		String authorization = "Bearer eyJhbGciOiJIUzUxMiJ9..rlFkYBBXruPfyyAn2tc1Tv6eDYinU6WnPgFU7ywtgdRnQSp2vK9imxh8q9i0jA9JAFxplpdkC98zFLJpPsN2kg";
+
+		var fileNames = listFiles("C:\\dev\\lab\\uploadfiles");
+		// Imprimir os nomes dos arquivos
+		fileNames.forEach(System.out::println);
 		
 		MultipartFile multipartFile = openFile(file);
 		
@@ -94,6 +98,20 @@ public class DemoApplication implements CommandLineRunner {
 			throw ex;
 		} finally {
 			tempFile.delete();
+		}
+	}
+
+	private List<String> listFiles(String directoryPath) {
+		try (Stream<Path> filesStream = Files.list(Paths.get(directoryPath))) {
+			List<String> fileNames = filesStream
+					.filter(Files::isRegularFile)
+					.map(Path::getFileName)
+					.map(Path::toString)
+					.collect(Collectors.toList());
+			return fileNames;
+		} catch (IOException e) {
+			log.error("Erro ==>", e);
+			throw new RuntimeException(e);
 		}
 	}
 	
