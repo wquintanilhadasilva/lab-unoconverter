@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Parcel Sandbox</title>
+	<meta charset="UTF-8" />
+</head>
+
+<!-- <body>
+	<div id="app"></div>
+
+	<script src="index.js">
+	</script>
+</body> -->
+
+<body>
+    <div class="container">
+        <h1>Multipart File Upload</h1>
+        <form id="form" enctype="multipart/form-data">
+            <div class="input-group">
+                <label for="file">Fale aí qual é o arquivo</label>
+                <input id="file" type="file" multiple />
+                <br/>
+                <label for="token">Token</label>
+                <input style="width: 100%;" id="token" type="text" value="eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZjdlMzY0NThiYTUyM2RiZTc5NjUzMDEwYzEzYTYxZiIsImF1ZCI6IndlYiIsImV4cCI6MTY3NDg0MTgxNCwiaWF0IjoxNjc0NzU1NDE0fQ.tgrcwIdPKgM_Pe7MtN7dVTZBTqjFJSMRHwi0tAQXZ7P0eTfK_doPM2uuEShxpvb-FYRZHyPvNe-sY3xTwqrBeA" />
+                <br/>
+                <label for="url">URL</label>
+                <input style="width: 100%;" id="url" type="text" value="http://samsung-ocr-hom.oobj-dfe.com.br/extrator/api/v1/comprovante" />
+
+                <br/>
+                <label for="webhook">Webhook</label>
+                <input style="width: 100%;" id="webhook" type="text" value="http://10.0.0.103:9080/webhook" />
+
+                <br/>
+                <label for="requestid">Request ID</label>
+                <input style="width: 100%;" id="requestid" type="text" value="YmlsbHk6c2VjcmV0cGFzc3dvcmQ=" />
+                
+            </div>
+            <button class="submit-btn" type="submit">Upload</button>
+        </form>
+    </div>
+
+	<hr/>
+
+	<span id="result" style="color: blue;"></span>
+
+    <script src="index.js"></script>
+</body>
+
+</html>
