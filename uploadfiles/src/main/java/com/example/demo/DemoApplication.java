@@ -42,10 +42,9 @@ public class DemoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		String file = "C:\\dev\\lab\\uploadfiles\\DANFE_GUILHERME_COELHO_MACHADO.pdf";
-		String authorization = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZjdlMzY0NThiYTUyM2RiZTc5NjUzMDEwYzEzYTYxZiIsImF1ZCI6IndlYiIsImV4cCI6MTY4Nzk1MzgyNywiaWF0IjoxNjg3ODY3NDI3fQ.rlFkYBBXruPfyyAn2tc1Tv6eDYinU6WnPgFU7ywtgdRnQSp2vK9imxh8q9i0jA9JAFxplpdkC98zFLJpPsN2kg";
+		String authorization = "Bearer eyJhbGciOiJIUzUxMiJ9..rlFkYBBXruPfyyAn2tc1Tv6eDYinU6WnPgFU7ywtgdRnQSp2vK9imxh8q9i0jA9JAFxplpdkC98zFLJpPsN2kg";
 		
-		String folderPath = "G:\\Meu Drive\\samsung\\danfes\\prd";
+		String folderPath = "G:\\Meu Drive\\danfes\\prd";
 		var fileNames = listFiles(folderPath);
 		ExecutorService executorService = Executors.newFixedThreadPool(5);
 		fileNames.parallelStream().forEach(fileName -> {
@@ -53,7 +52,6 @@ public class DemoApplication implements CommandLineRunner {
 				try {
 					enviarArquivo(authorization, folderPath + "/" + fileName);
 				} catch (IOException e) {
-					e.printStackTrace();
 					log.error("Erro ao processar...", e);
 				}
 			});
@@ -62,7 +60,6 @@ public class DemoApplication implements CommandLineRunner {
 	}
 	
 	private void enviarArquivo(String authorizationHeader, String filePath) throws IOException {
-		// Implemente o método para enviar o arquivo com base na lógica desejada.
 		log.info("[{}] - [{}]", authorizationHeader, filePath);
 		MultipartFile multipartFile = openFile(filePath);
 		
@@ -131,6 +128,5 @@ public class DemoApplication implements CommandLineRunner {
 			throw new RuntimeException(e);
 		}
 	}
-	
 	
 }
