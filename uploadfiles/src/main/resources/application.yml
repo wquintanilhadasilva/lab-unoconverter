@@ -1,0 +1,13 @@
+server:
+  port: 9081
+
+
+feign:
+  hystrix:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 500000
+        readTimeout: 500000
+        loggerLevel: basic
