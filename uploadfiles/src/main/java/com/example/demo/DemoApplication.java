@@ -20,6 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -40,23 +42,38 @@ public class DemoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		String file = "DANFE_GUILHERME_COELHO_MACHADO.pdf";
-		String authorization = "Bearer eyJhbGciOiJIUzUxMiJ9..rlFkYBBXruPfyyAn2tc1Tv6eDYinU6WnPgFU7ywtgdRnQSp2vK9imxh8q9i0jA9JAFxplpdkC98zFLJpPsN2kg";
-
-		var fileNames = listFiles("C:\\dev\\lab\\uploadfiles");
-		// Imprimir os nomes dos arquivos
-		fileNames.forEach(System.out::println);
+		String file = "C:\\dev\\lab\\uploadfiles\\DANFE_GUILHERME_COELHO_MACHADO.pdf";
+		String authorization = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZjdlMzY0NThiYTUyM2RiZTc5NjUzMDEwYzEzYTYxZiIsImF1ZCI6IndlYiIsImV4cCI6MTY4Nzk1MzgyNywiaWF0IjoxNjg3ODY3NDI3fQ.rlFkYBBXruPfyyAn2tc1Tv6eDYinU6WnPgFU7ywtgdRnQSp2vK9imxh8q9i0jA9JAFxplpdkC98zFLJpPsN2kg";
 		
-		MultipartFile multipartFile = openFile(file);
+		String folderPath = "G:\\Meu Drive\\samsung\\danfes\\prd";
+		var fileNames = listFiles(folderPath);
+		ExecutorService executorService = Executors.newFixedThreadPool(5);
+		fileNames.parallelStream().forEach(fileName -> {
+			executorService.execute(() -> {
+				try {
+					enviarArquivo(authorization, folderPath + "/" + fileName);
+				} catch (IOException e) {
+					e.printStackTrace();
+					log.error("Erro ao processar...", e);
+				}
+			});
+		});
+		executorService.shutdown();
+	}
+	
+	private void enviarArquivo(String authorizationHeader, String filePath) throws IOException {
+		// Implemente o método para enviar o arquivo com base na lógica desejada.
+		log.info("[{}] - [{}]", authorizationHeader, filePath);
+		MultipartFile multipartFile = openFile(filePath);
 		
 		log.info("Enviando requisição");
-		Response response = nFeUploadService.sentFile(authorization, multipartFile);
+		Response response = nFeUploadService.sentFile(authorizationHeader, multipartFile);
 		log.info("Status da requisição: [{}]\n ===>> [{}]", response.status(), response.reason());
 		if(response.status() == 200){
-			log.info("Enviado com sucesso: [{}]", response.status());
+			log.info("::OK:: Arquivo [{}] --> [{}]", filePath, response.status());
 			log.info(new String(response.body().asInputStream().readAllBytes()));
 		} else {
-			log.error("Erro na requisição para converter o arquivo: [{}] --> [{}]", file, response.reason());
+			log.error("::ERRO:: Arquivo: [{}] --> [{}]", filePath, response.reason());
 		}
 	}
 	
@@ -100,7 +117,7 @@ public class DemoApplication implements CommandLineRunner {
 			tempFile.delete();
 		}
 	}
-
+	
 	private List<String> listFiles(String directoryPath) {
 		try (Stream<Path> filesStream = Files.list(Paths.get(directoryPath))) {
 			List<String> fileNames = filesStream
