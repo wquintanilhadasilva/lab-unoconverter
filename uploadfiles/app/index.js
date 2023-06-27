@@ -1,7 +1,6 @@
 const uploadFile = (file, url, token, webhook, requestid) => {
   console.log("Uploading file...");
-  const API_ENDPOINT = url; // "http://localhost:8080/extrator/api/v1/comprovante"; //http://samsung-ocr-hom.oobj-dfe.com.br/extrator/api/v1/comprovante
-  const request = new XMLHttpRequest();
+  const API_ENDPOINT = url; // "http://localhost:8080/extrator/api/v1/comprovante";
 
   const formData = new FormData();
   formData.append("file", file);
