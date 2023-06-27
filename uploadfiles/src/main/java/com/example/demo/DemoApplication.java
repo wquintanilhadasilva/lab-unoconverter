@@ -40,8 +40,8 @@ public class DemoApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		
-		String file = "C:\\dev\\lab\\uploadfiles\\DANFE_GUILHERME_COELHO_MACHADO.pdf";
-		String authorization = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZjdlMzY0NThiYTUyM2RiZTc5NjUzMDEwYzEzYTYxZiIsImF1ZCI6IndlYiIsImV4cCI6MTY4Nzk1MzgyNywiaWF0IjoxNjg3ODY3NDI3fQ.rlFkYBBXruPfyyAn2tc1Tv6eDYinU6WnPgFU7ywtgdRnQSp2vK9imxh8q9i0jA9JAFxplpdkC98zFLJpPsN2kg";
+		String file = "DANFE_GUILHERME_COELHO_MACHADO.pdf";
+		String authorization = "Bearer eyJhbGciOiJIUzUxMiJ9..rlFkYBBXruPfyyAn2tc1Tv6eDYinU6WnPgFU7ywtgdRnQSp2vK9imxh8q9i0jA9JAFxplpdkC98zFLJpPsN2kg";
 		
 		MultipartFile multipartFile = openFile(file);
 		
